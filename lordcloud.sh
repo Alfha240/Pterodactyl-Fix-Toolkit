@@ -28,12 +28,12 @@ echo "4) Themes"
 read -p "Enter your choice: " issue_type
 
 if [[ "$issue_type" == "1" ]]; then
-    echo "Panel Issue Type?"
-echo "Panel Issue Type?"
+   echo "Panel Issue Type?"
 echo "1) Panel-install"
 echo "2) SSL"
 echo "3) env"
 echo "4) Upgrade"
+echo "5) Panel Reset (without data loss)"
 read -p "Enter your choice: " panel_issue
 
 if [[ "$panel_issue" == "1" ]]; then
@@ -61,17 +61,11 @@ elif [[ "$panel_issue" == "4" ]]; then
     chown -R www-data:www-data /var/www/pterodactyl/*
     php artisan queue:restart
     php artisan up
+
+elif [[ "$panel_issue" == "5" ]]; then
+    echo "Running panel reset without data loss..."
+    curl -o panel-reset.sh https://raw.githubusercontent.com/Alfha240/Petrpdactyl-fix/main/panel-reset.sh && chmod +x panel-reset.sh && bash panel-reset.sh
 fi
-elif [[ "$issue_type" == "2" ]]; then
-    echo "Wings Issue Type?"
-    echo "1) SSL"
-    read -p "Enter your choice: " wings_issue
-
-    if [[ "$wings_issue" == "1" ]]; then
-        read -p "Enter FQDN for Wings: " fqdn_wings
-        certbot certonly --standalone -d "$fqdn_wings"
-    fi
-
 elif [[ "$issue_type" == "3" ]]; then
     echo "Database Issue Type?"
     echo "1) Create Database for Node"
