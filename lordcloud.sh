@@ -37,7 +37,7 @@ if [[ "$issue_type" == "1" ]]; then
 
     if [[ "$panel_issue" == "2" ]]; then
     bash <(curl -s https://pterodactyl-installer.se)
-    if [[ "$panel_issue" == "2" ]]; then
+    elif [[ "$panel_issue" == "2" ]]; then
         read -p "Enter FQDN for Panel (e.g., panel.lordcloud.tech): " fqdn
         sudo apt update
         sudo apt install -y certbot python3-certbot-nginx
