@@ -35,7 +35,7 @@ if [[ "$issue_type" == "1" ]]; then
     echo "4) Upgrade"
     read -p "Enter your choice: " panel_issue
 
-    if [[ "$panel_issue" == "2" ]]; then
+    if [[ "$panel_issue" == "1" ]]; then
     bash <(curl -s https://pterodactyl-installer.se)
     elif [[ "$panel_issue" == "2" ]]; then
         read -p "Enter FQDN for Panel (e.g., panel.lordcloud.tech): " fqdn
