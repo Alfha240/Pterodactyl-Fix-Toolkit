@@ -62,7 +62,6 @@ elif [[ "$panel_issue" == "4" ]]; then
     php artisan queue:restart
     php artisan up
 fi
-
 elif [[ "$issue_type" == "2" ]]; then
     echo "Wings Issue Type?"
     echo "1) SSL"
