@@ -43,8 +43,6 @@ if [[ "$issue_type" == "1" ]]; then
     elif [[ "$panel_issue" == "2" ]]; then
         echo "Too risky to edit via script. Exiting."
         exit 1
-elif [[ "$panel_issue" == "4" ]]; then
-bash <(curl -s https://pterodactyl-installer.se)
     elif [[ "$panel_issue" == "3" ]]; then
         cd /var/www/pterodactyl
         php artisan down
@@ -57,6 +55,8 @@ bash <(curl -s https://pterodactyl-installer.se)
         chown -R www-data:www-data /var/www/pterodactyl/*
         php artisan queue:restart
         php artisan up
+     elif [[ "$panel_issue" == "4" ]]; then
+        bash <(curl -s https://pterodactyl-installer.se)
     fi
 
 elif [[ "$issue_type" == "2" ]]; then
