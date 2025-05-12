@@ -28,12 +28,13 @@ echo "4) Themes"
 read -p "Enter your choice: " issue_type
 
 if [[ "$issue_type" == "1" ]]; then
-   echo "Panel Issue Type?"
+  echo "Panel Issue Type?"
 echo "1) Panel-install"
 echo "2) SSL"
 echo "3) env"
 echo "4) Upgrade"
-echo "5) Panel Reset (without data loss)"
+echo "5) Building Panel Assets"
+echo "6) Panel Reset (without data loss)"
 read -p "Enter your choice: " panel_issue
 
 if [[ "$panel_issue" == "1" ]]; then
@@ -63,6 +64,21 @@ elif [[ "$panel_issue" == "4" ]]; then
     php artisan up
 
 elif [[ "$panel_issue" == "5" ]]; then
+    echo "⚙️ Building Panel Assets and Installing Dependencies..."
+
+    curl -sL https://deb.nodesource.com/setup_16.x | bash -
+    apt install -y nodejs
+
+    npm i -g yarn
+
+    cd /var/www/pterodactyl || exit
+    yarn install --network-timeout 600000
+
+    apt update && apt upgrade -y
+
+    echo "✅ Pterodactyl Panel Assets Built Successfully!"
+
+elif [[ "$panel_issue" == "6" ]]; then
     echo "Running panel reset without data loss..."
     curl -o panel-reset.sh https://raw.githubusercontent.com/Alfha240/Petrpdactyl-fix/main/panel-reset.sh && chmod +x panel-reset.sh && bash panel-reset.sh
 fi
