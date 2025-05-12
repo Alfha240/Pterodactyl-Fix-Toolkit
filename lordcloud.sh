@@ -29,35 +29,39 @@ read -p "Enter your choice: " issue_type
 
 if [[ "$issue_type" == "1" ]]; then
     echo "Panel Issue Type?"
-    echo "1) SSL"
-    echo "2) env"
-    echo "3) Upgrade"
-    echo "4) Panel-install"
-    read -p "Enter your choice: " panel_issue
+echo "Panel Issue Type?"
+echo "1) Panel-install"
+echo "2) SSL"
+echo "3) env"
+echo "4) Upgrade"
+read -p "Enter your choice: " panel_issue
 
-    if [[ "$panel_issue" == "1" ]]; then
-        read -p "Enter FQDN for Panel (e.g., panel.lordcloud.tech): " fqdn
-        sudo apt update
-        sudo apt install -y certbot python3-certbot-nginx
-        certbot certonly --nginx -d "$fqdn"
-    elif [[ "$panel_issue" == "2" ]]; then
-        echo "Too risky to edit via script. Exiting."
-        exit 1
-    elif [[ "$panel_issue" == "3" ]]; then
-        cd /var/www/pterodactyl
-        php artisan down
-        curl -L https://github.com/pterodactyl/panel/releases/latest/download/panel.tar.gz | tar -xzv
-        chmod -R 755 storage/* bootstrap/cache
-        composer install --no-dev --optimize-autoloader
-        php artisan view:clear
-        php artisan config:clear
-        php artisan migrate --seed --force
-        chown -R www-data:www-data /var/www/pterodactyl/*
-        php artisan queue:restart
-        php artisan up
-     elif [[ "$panel_issue" == "4" ]]; then
-        bash <(curl -s https://pterodactyl-installer.se)
-    fi
+if [[ "$panel_issue" == "1" ]]; then
+    bash <(curl -s https://pterodactyl-installer.se)
+
+elif [[ "$panel_issue" == "2" ]]; then
+    read -p "Enter FQDN for Panel (e.g., panel.lordcloud.tech): " fqdn
+    apt update
+    apt install -y certbot python3-certbot-nginx
+    certbot certonly --nginx -d "$fqdn"
+
+elif [[ "$panel_issue" == "3" ]]; then
+    echo "Too risky to edit via script. Exiting."
+    exit 1
+
+elif [[ "$panel_issue" == "4" ]]; then
+    cd /var/www/pterodactyl
+    php artisan down
+    curl -L https://github.com/pterodactyl/panel/releases/latest/download/panel.tar.gz | tar -xzv
+    chmod -R 755 storage/* bootstrap/cache
+    composer install --no-dev --optimize-autoloader
+    php artisan view:clear
+    php artisan config:clear
+    php artisan migrate --seed --force
+    chown -R www-data:www-data /var/www/pterodactyl/*
+    php artisan queue:restart
+    php artisan up
+fi
 
 elif [[ "$issue_type" == "2" ]]; then
     echo "Wings Issue Type?"
