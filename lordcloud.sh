@@ -29,20 +29,23 @@ read -p "Enter your choice: " issue_type
 
 if [[ "$issue_type" == "1" ]]; then
     echo "Panel Issue Type?"
-    echo "1) SSL"
-    echo "2) env"
-    echo "3) Upgrade"
+    echo "1) Panel-install"
+    echo "2) SSL"
+    echo "3) env"
+    echo "4) Upgrade"
     read -p "Enter your choice: " panel_issue
 
-    if [[ "$panel_issue" == "1" ]]; then
+    if [[ "$panel_issue" == "2" ]]; then
+    bash <(curl -s https://pterodactyl-installer.se)
+    if [[ "$panel_issue" == "2" ]]; then
         read -p "Enter FQDN for Panel (e.g., panel.lordcloud.tech): " fqdn
         sudo apt update
         sudo apt install -y certbot python3-certbot-nginx
         certbot certonly --nginx -d "$fqdn"
-    elif [[ "$panel_issue" == "2" ]]; then
+    elif [[ "$panel_issue" == "3" ]]; then
         echo "Too risky to edit via script. Exiting."
         exit 1
-    elif [[ "$panel_issue" == "3" ]]; then
+    elif [[ "$panel_issue" == "4" ]]; then
         cd /var/www/pterodactyl
         php artisan down
         curl -L https://github.com/pterodactyl/panel/releases/latest/download/panel.tar.gz | tar -xzv
