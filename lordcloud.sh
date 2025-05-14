@@ -164,9 +164,7 @@ elif [[ "$issue_type" == "4" ]]; then
          echo "3) Minecraft Purple-Theme
 
      if [[ "$Free_Theme_Install" == "1" ]]; then
-     curl -O https://raw.githubusercontent.com/Alfha240/Petrpdactyl-fix/main/nook-theme.sh
-
-        
+     curl -O https://raw.githubusercontent.com/Alfha240/Petrpdactyl-fix/main/nook-theme.sh    
         fi
     fi
 fi
