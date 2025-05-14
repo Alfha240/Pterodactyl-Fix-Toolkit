@@ -112,8 +112,6 @@ elif [[ "$issue_type" == "4" ]]; then
     echo "Theme Selection:"
     echo "1) Standalone [WIP]"
     echo "2) Blueprint"
-    echo "3) Free_Theme_Install"
-    
     read -p "Enter your choice: " theme_choice
 
     if [[ "$theme_choice" == "2" ]]; then
@@ -155,16 +153,7 @@ elif [[ "$issue_type" == "4" ]]; then
             panel_path=${panel_path:-/var/www/pterodactyl}
             wget -O "$panel_path/nebula.blueprint" "https://storage.xitewebservices.cloud/nebula.blueprint"
             cd "$panel_path"
-            blueprint -install nebula
-         
-       elif [[ "$ Free_Theme_Install" == "3" ]]; then 
-         echo "Which Theme You Want:"
-         echo "1) Install Nook-theme"
-         echo "2) Install Ice MineCraft-theme"
-         echo "3) Minecraft Purple-Theme
-
-     if [[ "$Free_Theme_Install" == "1" ]]; then
-     curl -O https://raw.githubusercontent.com/Alfha240/Petrpdactyl-fix/main/nook-theme.sh    
+            blueprint -install nebula 
         fi
     fi
 fi
