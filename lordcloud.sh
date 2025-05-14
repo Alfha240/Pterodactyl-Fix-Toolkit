@@ -157,11 +157,11 @@ elif [[ "$issue_type" == "4" ]]; then
             blueprint -install nebula 
         fi
 
-    elif [[ "$theme_choice" == "3" ]]; then
+       elif [[ "$theme_choice" == "3" ]]; then
         echo "Which Free Theme Do You Want to Install?"
         echo "1) Install Nook-theme"
         echo "2) Install Ice Minecraft-theme"
-        echo "3) Minecraft Purple-theme"
+        echo "3) Minecraft Purple-Theme"
         read -p "Enter your choice: " Free_Theme_Install
 
         if [[ "$Free_Theme_Install" == "1" ]]; then
@@ -175,5 +175,5 @@ elif [[ "$issue_type" == "4" ]]; then
         else
             echo "Invalid choice for Free Theme Install."
         fi
-    fi
+    fi 
 fi
