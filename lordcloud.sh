@@ -112,6 +112,7 @@ elif [[ "$issue_type" == "4" ]]; then
     echo "Theme Selection:"
     echo "1) Standalone [WIP]"
     echo "2) Blueprint"
+    echo "3) Free Theme Install"
     read -p "Enter your choice: " theme_choice
 
     if [[ "$theme_choice" == "2" ]]; then
@@ -154,6 +155,25 @@ elif [[ "$issue_type" == "4" ]]; then
             wget -O "$panel_path/nebula.blueprint" "https://storage.xitewebservices.cloud/nebula.blueprint"
             cd "$panel_path"
             blueprint -install nebula 
+        fi
+
+    elif [[ "$theme_choice" == "3" ]]; then
+        echo "Which Free Theme Do You Want to Install?"
+        echo "1) Install Nook-theme"
+        echo "2) Install Ice Minecraft-theme"
+        echo "3) Minecraft Purple-theme"
+        read -p "Enter your choice: " Free_Theme_Install
+
+        if [[ "$Free_Theme_Install" == "1" ]]; then
+            curl -O https://raw.githubusercontent.com/Alfha240/Petrpdactyl-fix/main/nook-theme.sh
+            chmod +x nook-theme.sh
+            bash nook-theme.sh
+        elif [[ "$Free_Theme_Install" == "2" ]]; then
+            echo "❗ Ice Minecraft-theme script not yet implemented."
+        elif [[ "$Free_Theme_Install" == "3" ]]; then
+            echo "❗ Minecraft Purple-theme script not yet implemented."
+        else
+            echo "Invalid choice for Free Theme Install."
         fi
     fi
 fi
