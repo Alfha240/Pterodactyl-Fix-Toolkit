@@ -11,6 +11,7 @@ fi
 # Check if Pterodactyl is installed
 if [[ ! -d "/etc/pterodactyl" && ! -d "/var/www/pterodactyl" ]]; then
     echo "❌ Pterodactyl installation not found!"
+    bash <(curl -s https://pterodactyl-installer.se)
     exit 1
 fi
 
