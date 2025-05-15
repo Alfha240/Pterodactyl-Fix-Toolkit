@@ -10,6 +10,11 @@ wget "$(curl -s https://api.github.com/repos/BlueprintFramework/framework/releas
 mv release.zip /path/to/pterodactyl/release.zip
 cd /path/to/pterodactyl
 unzip release.zip
+touch /var/www/pterodactyl/.blueprintrc
+echo \
+'WEBUSER="www-data";
+OWNERSHIP="www-data:www-data";
+USERSHELL="/bin/bash";' >> /var/ww/pterodactyl/.blueprintrc
 
 chmod +x blueprint.sh
 bash blueprint.sh
