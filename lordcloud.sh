@@ -7,14 +7,6 @@ if [[ $EUID -ne 0 ]]; then
     echo "❌ This script must be run as root!"
     exit 1
 fi
-
-# Check if Pterodactyl is installed
-if [[ ! -d "/etc/pterodactyl" && ! -d "/var/www/pterodactyl" ]]; then
-    echo "❌ Pterodactyl installation not found!"
-    bash <(curl -s https://pterodactyl-installer.se)
-    exit 1
-fi
-
 # Banner
 echo "###############################################"
 echo "#       Welcome to the LordCloud Fix Tool      #"
