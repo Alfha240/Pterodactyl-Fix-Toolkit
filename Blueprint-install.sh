@@ -5,13 +5,20 @@ echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.co
 apt-get update
 apt-get install -y nodejs
 npm i -g yarn
+
 cd /var/www/pterodactyl
 yarn
+
+# Install missing Blueprint framework dependencies
+yarn add --dev webpack webpack-cli react react-dom
+
 apt update && apt upgrade -y
 apt install -y zip unzip git curl wget
-#now install plueprint zip
+
+# now install blueprint zip
 wget "$(curl -s https://api.github.com/repos/BlueprintFramework/framework/releases/latest | grep 'browser_download_url' | cut -d '"' -f 4)" -O release.zip
 mv release.zip /var/www/pterodactyl/release.zip
+
 cd /var/www/pterodactyl
 unzip release.zip
 chmod +x blueprint.sh
