@@ -1,28 +1,46 @@
 #!/bin/bash
 
-# Automatic Pterodactyl Dependency Installer
-# Author: ChatGPT
-# Description: Installs Node.js, Yarn, and updates system packages.
+# Blueprint Installer Script for Pterodactyl Panel
+# Always uses /var/www/pterodactyl as the panel path
 
+set -e
+
+echo "Starting Blueprint installation..."
+
+echo "Current directory:"
+pwd
+
+# Update and setup Node.js 20.x repository
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt-get install -y nodejs
 
-# Step 2: Install Yarn
-echo "🔹 Installing Yarn..."
-npm i -g yarn
+# Update package list and install nodejs
 apt-get update
-apt-get install -y nodejs
+apt-get install -y nodejs zip unzip git curl wget
 
 
-echo "✅ Pterodactyl Dependencies Installed Successfully!"
-cd /var/www/pterodactyl
-npm i -g yarn
+
+# Go to fixed panel path
+cd /var/www/pterodactyl || { echo "Error: /var/www/pterodactyl not found!"; exit 1; }
+
+echo "Changed directory to $(pwd)"
+
+# Install dependencies with yarn
+npm install -g yarn
+
 yarn
-apt update && apt upgrade -y
-apt install -y zip unzip git curl wget
 
-# now install blueprint zip
-wget "$(curl -s https://api.github.com/repos/BlueprintFramework/framework/releases/latest | grep 'browser_download_url' | cut -d '"' -f 4)" -O release.zip
-unzip release.zip
+# Download latest Blueprint release zip
+latest_release_url=$(curl -s https://api.github.com/repos/BlueprintFramework/framework/releases/latest | grep 'browser_download_url' | cut -d '"' -f 4)
+echo "Downloading Blueprint from $latest_release_url"
+wget "$latest_release_url" -O release.zip
+
+# Unzip release
+unzip -o release.zip
+
+# Make blueprint.sh executable
 chmod +x blueprint.sh
+
+# Run blueprint.sh to complete install
 bash blueprint.sh
+
+echo "✅ Blueprint installation completed!"
