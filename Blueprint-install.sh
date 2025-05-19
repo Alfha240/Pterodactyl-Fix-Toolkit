@@ -4,41 +4,26 @@
 # Author: ChatGPT
 # Description: Installs Node.js, Yarn, and updates system packages.
 
-echo "🚀 Starting Pterodactyl Dependency Installation..."
-
-# Step 1: Install Node.js 16.x
-echo "🔹 Installing Node.js 16.x..."
-curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
-sudo apt install -y nodejs
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt-get install -y nodejs
 
 # Step 2: Install Yarn
 echo "🔹 Installing Yarn..."
 npm i -g yarn
+apt-get update
+apt-get install -y nodejs
 
-# Step 3: Install Dependencies in Pterodactyl Directory
-echo "🔹 Installing Pterodactyl dependencies..."
-cd /var/www/pterodactyl || exit
-yarn install --network-timeout 600000
-
-# Step 4: Update & Upgrade System
-echo "🔹 Updating and upgrading system packages..."
-apt update && apt upgrade -y
 
 echo "✅ Pterodactyl Dependencies Installed Successfully!"
 cd /var/www/pterodactyl
+npm i -g yarn
 yarn
-
-# Install missing Blueprint framework dependencies
-yarn add --dev webpack webpack-cli react react-dom
-
 apt update && apt upgrade -y
 apt install -y zip unzip git curl wget
 
 # now install blueprint zip
 wget "$(curl -s https://api.github.com/repos/BlueprintFramework/framework/releases/latest | grep 'browser_download_url' | cut -d '"' -f 4)" -O release.zip
 mv release.zip /var/www/pterodactyl/release.zip
-
-cd /var/www/pterodactyl
 unzip release.zip
 chmod +x blueprint.sh
 bash blueprint.sh
