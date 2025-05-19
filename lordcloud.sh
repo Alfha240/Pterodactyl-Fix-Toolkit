@@ -7,6 +7,7 @@ if [[ $EUID -ne 0 ]]; then
     echo "❌ This script must be run as root!"
     exit 1
 fi
+
 # Banner
 echo "###############################################"
 echo "#       Welcome to the LordCloud Fix Tool      #"
@@ -49,7 +50,7 @@ if [[ "$issue_type" == "1" ]]; then
         exit 1
 
     elif [[ "$panel_issue" == "4" ]]; then
-        cd /var/www/pterodactyl
+        cd /var/www/pterodactyl || exit
         php artisan down
         curl -L https://github.com/pterodactyl/panel/releases/latest/download/panel.tar.gz | tar -xzv
         chmod -R 755 storage/* bootstrap/cache
@@ -73,7 +74,14 @@ if [[ "$issue_type" == "1" ]]; then
         curl -o panel-reset.sh https://raw.githubusercontent.com/Alfha240/Petrpdactyl-fix/main/panel-reset.sh
         chmod +x panel-reset.sh
         bash panel-reset.sh
+
+    else
+        echo "❌ Invalid choice."
     fi
+
+### WINGS ###
+elif [[ "$issue_type" == "2" ]]; then
+    echo "Wings fixes coming soon."
 
 ### DATABASE ###
 elif [[ "$issue_type" == "3" ]]; then
@@ -86,7 +94,7 @@ elif [[ "$issue_type" == "3" ]]; then
         read -p "Enter DB Password [default: lordpass]: " db_pass
         db_pass=${db_pass:-lordpass}
 
-        curl -LsS https://r.mariadb.com/downloads/mariadb_repo_setup | sudo bash
+        curl -LsS https://r.mariadb.com/downloads/mariadb_repo_setup | bash
         apt update
         apt -y install mariadb-server
 
@@ -97,39 +105,45 @@ elif [[ "$issue_type" == "3" ]]; then
         echo "Edit /etc/mysql/my.cnf and set bind-address=0.0.0.0"
         echo "Then run: systemctl enable --now mariadb"
         read -p "Press Enter when ready..."
+    else
+        echo "❌ Invalid choice."
     fi
 
 ### THEMES ###
 elif [[ "$issue_type" == "4" ]]; then
-  echo "1) Standalone (Coming Soon)"
-echo "2) Blueprint"
-echo "3) Free Theme Install"
-read -p "Enter your choice: " theme_choice
+    echo "1) Standalone (Coming Soon)"
+    echo "2) Blueprint"
+    echo "3) Free Theme Install"
+    read -p "Enter your choice: " theme_choice
 
-if [[ "$theme_choice" == "1" ]]; then
-    echo "Standalone theme installation coming soon."
+    if [[ "$theme_choice" == "1" ]]; then
+        echo "Standalone theme installation coming soon."
 
-elif [[ "$theme_choice" == "2" ]]; then
-    echo "⚠️ Blueprint replaces core files. Backup recommended."
-    read -p "Backup /var/www/pterodactyl? (Y/N): " backup_choice
-    if [[ "$backup_choice" == "Y" || "$backup_choice" == "y" ]]; then
-        tar -czvf /var/www/pterodactyl/backup_$(date +%F).tar.gz /var/www/pterodactyl
-    fi
+    elif [[ "$theme_choice" == "2" ]]; then
+        echo "⚠️ Blueprint replaces core files. Backup recommended."
+        read -p "Backup /var/www/pterodactyl? (Y/N): " backup_choice
+        if [[ "$backup_choice" =~ ^[Yy]$ ]]; then
+            tar -czvf /var/www/pterodactyl/backup_$(date +%F).tar.gz /var/www/pterodactyl
+        fi
 
-    echo "Installing Blueprint..."
-    bash <(curl -s https://raw.githubusercontent.com/Alfha240/Pterodactyl-Fix-Toolkit/main/Blueprint-install.sh)
+        echo "1) Install Blueprint"
+        echo "2) Install Nebula"
+        read -p "Enter your choice: " blueprint_choice
 
-elif [[ "$theme_choice" == "3" ]]; then
-    echo "Installing free theme... (functionality coming soon)"
-else
-    echo "Invalid choice."
-fi
+        if [[ "$blueprint_choice" == "1" ]]; then
+            echo "Installing Blueprint..."
+            bash <(curl -s https://raw.githubusercontent.com/Alfha240/Pterodactyl-Fix-Toolkit/main/Blueprint-install.sh)
+
         elif [[ "$blueprint_choice" == "2" ]]; then
+            echo "Installing Nebula..."
             read -p "Enter panel path [default: /var/www/pterodactyl]: " panel_path
             panel_path=${panel_path:-/var/www/pterodactyl}
             wget -O "$panel_path/nebula.blueprint" "https://storage.xitewebservices.cloud/nebula.blueprint"
-            cd "$panel_path"
+            cd "$panel_path" || { echo "Panel path not found!"; exit 1; }
             blueprint -install nebula
+
+        else
+            echo "❌ Invalid choice."
         fi
 
     elif [[ "$theme_choice" == "3" ]]; then
@@ -137,21 +151,27 @@ fi
         echo "1) Nook-theme"
         echo "2) Ice Minecraft-theme"
         echo "3) Minecraft Purple-theme"
-        read -p "Enter your choice: " Free_Theme_Install
+        read -p "Enter your choice: " free_theme_choice
 
-        if [[ "$Free_Theme_Install" == "1" ]]; then
+        if [[ "$free_theme_choice" == "1" ]]; then
             curl -O https://raw.githubusercontent.com/Alfha240/Petrpdactyl-fix/main/nook-theme.sh
             chmod +x nook-theme.sh
             bash nook-theme.sh
 
-        elif [[ "$Free_Theme_Install" == "2" ]]; then
+        elif [[ "$free_theme_choice" == "2" ]]; then
             bash <(curl -s https://raw.githubusercontent.com/Angelillo15/IceMinecraftTheme/main/install.sh)
 
-        elif [[ "$Free_Theme_Install" == "3" ]]; then
+        elif [[ "$free_theme_choice" == "3" ]]; then
             bash <(curl -s https://raw.githubusercontent.com/Angelillo15/MinecraftPurpleTheme/main/install.sh)
 
         else
             echo "❌ Invalid theme choice."
         fi
+
+    else
+        echo "❌ Invalid theme choice."
     fi
+
+else
+    echo "❌ Invalid main menu choice."
 fi
