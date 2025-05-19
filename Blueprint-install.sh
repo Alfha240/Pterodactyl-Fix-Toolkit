@@ -23,7 +23,6 @@ apt install -y zip unzip git curl wget
 
 # now install blueprint zip
 wget "$(curl -s https://api.github.com/repos/BlueprintFramework/framework/releases/latest | grep 'browser_download_url' | cut -d '"' -f 4)" -O release.zip
-mv release.zip /var/www/pterodactyl/release.zip
 unzip release.zip
 chmod +x blueprint.sh
 bash blueprint.sh
