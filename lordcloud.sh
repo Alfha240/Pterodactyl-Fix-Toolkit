@@ -101,42 +101,29 @@ elif [[ "$issue_type" == "3" ]]; then
 
 ### THEMES ###
 elif [[ "$issue_type" == "4" ]]; then
-    echo "Theme Options:"
-    echo "1) Standalone [WIP]"
-    echo "2) Blueprint"
-    echo "3) Free Theme Install"
-    read -p "Enter your choice: " theme_choice
+  echo "1) Standalone (Coming Soon)"
+echo "2) Blueprint"
+echo "3) Free Theme Install"
+read -p "Enter your choice: " theme_choice
 
-    if [[ "$theme_choice" == "1" ]]; then
-        echo "Standalone theme installation coming soon."
+if [[ "$theme_choice" == "1" ]]; then
+    echo "Standalone theme installation coming soon."
 
-    elif [[ "$theme_choice" == "2" ]]; then
-        echo "⚠️ Blueprint replaces core files. Backup recommended."
-        read -p "Backup /var/www/pterodactyl? (Y/N): " backup_choice
-        if [[ "$backup_choice" == "Y" || "$backup_choice" == "y" ]]; then
-            tar -czvf /var/www/pterodactyl/backup_$(date +%F).tar.gz /var/www/pterodactyl
-        fi
+elif [[ "$theme_choice" == "2" ]]; then
+    echo "⚠️ Blueprint replaces core files. Backup recommended."
+    read -p "Backup /var/www/pterodactyl? (Y/N): " backup_choice
+    if [[ "$backup_choice" == "Y" || "$backup_choice" == "y" ]]; then
+        tar -czvf /var/www/pterodactyl/backup_$(date +%F).tar.gz /var/www/pterodactyl
+    fi
 
-        echo "1) Install Blueprint"
-        echo "2) Install Nebula"
-        read -p "Enter your choice: " blueprint_choice
+    echo "Installing Blueprint..."
+    bash <(curl -s https://raw.githubusercontent.com/Alfha240/Pterodactyl-Fix-Toolkit/main/Blueprint-install.sh)
 
-        if [[ "$blueprint_choice" == "1" ]]; then
-            read -p "Enter panel path [default: /var/www/pterodactyl]: " panel_path
-            panel_path=${panel_path:-/var/www/pterodactyl}
-            apt install -y ca-certificates curl gnupg
-            mkdir -p /etc/apt/keyrings
-            curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-            echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" > /etc/apt/sources.list.d/nodesource.list
-            apt update
-            apt install -y nodejs yarn zip unzip git curl wget
-            cd "$panel_path"
-            wget "$(curl -s https://api.github.com/repos/BlueprintFramework/framework/releases/latest | grep 'browser_download_url' | cut -d '"' -f 4)" -O release.zip
-            unzip release.zip
-            echo -e 'WEBUSER="www-data";\nOWNERSHIP="www-data:www-data";\nUSERSHELL="/bin/bash";' > "$panel_path/.blueprintrc"
-            chmod +x blueprint.sh
-            bash blueprint.sh
-
+elif [[ "$theme_choice" == "3" ]]; then
+    echo "Installing free theme... (functionality coming soon)"
+else
+    echo "Invalid choice."
+fi
         elif [[ "$blueprint_choice" == "2" ]]; then
             read -p "Enter panel path [default: /var/www/pterodactyl]: " panel_path
             panel_path=${panel_path:-/var/www/pterodactyl}
