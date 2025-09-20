@@ -13,7 +13,7 @@ echo "###############################################"
 echo "#       Welcome to the LordCloud Fix Tool      #"
 echo "#  India's Leading High-Performance Game Cloud #"
 echo "#   Optimized for Minecraft & AI Workloads!    #"
-echo "#          Visit: https://lordcloud.tech       #"
+echo "#          Visit: https://lordcloud.in         #"
 echo "###############################################"
 sleep 5
 
@@ -128,6 +128,7 @@ elif [[ "$issue_type" == "4" ]]; then
 
         echo "1) Install Blueprint"
         echo "2) Install Nebula"
+        echo "3) Install Blueprint Addon"
         read -p "Enter your choice: " blueprint_choice
 
         if [[ "$blueprint_choice" == "1" ]]; then
@@ -141,6 +142,51 @@ elif [[ "$issue_type" == "4" ]]; then
             wget -O "$panel_path/nebula.blueprint" "https://storage.xitewebservices.cloud/nebula.blueprint"
             cd "$panel_path" || { echo "Panel path not found!"; exit 1; }
             blueprint -install nebula
+
+        elif [[ "$blueprint_choice" == "3" ]]; then
+            echo "Installing Blueprint Addon directly into panel directory (/var/www/pterodactyl)..."
+            read -p "Proceed? (Y/N) [Y]: " proceed_choice
+            proceed_choice=${proceed_choice:-Y}
+            if [[ ! "$proceed_choice" =~ ^[Yy]$ ]]; then
+                echo "Aborted by user."
+            else
+                PANEL_DIR="/var/www/pterodactyl"
+                if [[ ! -d "$PANEL_DIR" ]]; then
+                    echo "❌ Panel directory $PANEL_DIR not found!"
+                    exit 1
+                fi
+
+                # ensure tools
+                apt update -y
+                apt install -y wget unzip
+
+                cd "$PANEL_DIR" || { echo "Cannot cd to $PANEL_DIR"; exit 1; }
+
+                # download and extract only .blueprint files directly into panel
+                ZIP_URL="https://github.com/Alfha240/Blueprint-Addon/archive/refs/heads/main.zip"
+                wget -q "$ZIP_URL" -O blueprint-addon.zip || { echo "❌ Download failed"; rm -f blueprint-addon.zip; exit 1; }
+                unzip -jo blueprint-addon.zip "Blueprint-Addon-main/*.blueprint" -d . >/dev/null 2>&1 || true
+                rm -f blueprint-addon.zip
+
+                echo "✅ .blueprint files are now in $PANEL_DIR (if present)."
+
+                # Attempt to install each blueprint using absolute path
+                if command -v blueprint >/dev/null 2>&1; then
+                    shopt -s nullglob
+                    for addon in "$PANEL_DIR"/*.blueprint; do
+                        if [[ -f "$addon" ]]; then
+                            echo "⚙️ Installing: $(basename "$addon")"
+                            blueprint -i "$addon" || blueprint -install "$addon" || echo "⚠️ Manual install may be required for $addon"
+                        fi
+                    done
+                    shopt -u nullglob
+                else
+                    echo "⚠️ blueprint CLI not found. To install it run:"
+                    echo "bash <(curl -s https://raw.githubusercontent.com/Alfha240/Pterodactyl-Fix-Toolkit/main/Blueprint-install.sh)"
+                    echo "Or install the official blueprint CLI and then run:"
+                    echo "  cd $PANEL_DIR && blueprint -i <addon>.blueprint"
+                fi
+            fi
 
         else
             echo "❌ Invalid choice."
